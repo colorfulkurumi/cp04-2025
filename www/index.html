@@ -1,4 +1,4 @@
-<!DOCTYPE HTML> 
+<!DOCTYPE HTML>
 <html>
 <head>
   <meta charset="utf-8">
@@ -141,7 +141,12 @@
         var m = parseInt((rest-h*3600)/60);
         var s = parseInt(rest-h*3600-m*60);
         clock(h,m,s,true);
-
+        var n = parseInt(rest/60);
+        var s = parseInt(rest - m*60);
+        var mstr = "分：" + "〇".repeat(n);
+        var sstr = "秒：" + "〇".repeat(s);
+        $("#minuteStr").html(mstr);
+        $("#secondStr").html(sstr);
     }
 
 
@@ -150,11 +155,6 @@
 
 
     // 変数宣言
-    var active = false;
-    var startTime = 0;
-    var period = 0;
-    var rest = 0;
-    var etime = 0;
 
 
     
@@ -163,57 +163,74 @@
         $('#btnA').prop('disabled', false);
         $('#btnB').prop('disabled', false);
         $('#btnC').prop('disabled', false);
-        
+        btnCClick(null);
     }
 
     // Alarmの処理
     function alarm(){
         var canvas = $("#mycanvas")[0];
         var ctx = canvas.getContext("2d");
-        var img = new Image();
-        img.src = "ksuisbg.gif";
+        var img = new Image(); 　
+        img.src = "ksuisbg.gif"; 
         img.onload = function() {
-            ctx.drawImage(img, 0, 0, 300, 300);
+            ctx.drawImage(img, 0, 0, 300, 300); 
         };
         var audio = new Audio();
-        audio.src = "pin.wav";
+        audio.src = "pin.wav";　
         audio.play();
+
+        
     }
     
     // ButtonAがクリックされた時の処理
     function btnAClick(e){
         active = true;
-        startTime = new Date();
+        if (pausedTime) {
+            startTime = new Date() - pausedTime * 1000;
+        } else {
+            startTime = new Date();
+        }
+        pausedTime = 0;
+        $("#btnA").prop('disabled', true);
+        $("#btnC").prop('disabled', true);
     }
 
     // ButtonBがクリックされた時の処理
     function btnBClick(e){
-        active = false;
+        active = false; 
+        pausedTime = etime;
+        $("#btnA").prop('disabled', false);
+        $("#btnC").prop('disabled', false);
     }
 
     // ButtonCがクリックされた時の処理
     function btnCClick(e){
         alarm();
         active = false;
+        pausedTime = 0;
         period = 60* parseInt( $("#minute").val() ) + parseInt( $("#second").val() );
-        $("#time").html("経過時間： 0");
+        $("#time").html("経過時間： 0");　
         $("#remain").html("残り時間： " + period);
     }
     
  
     // 繰り返し実行する処理
-    function timer(){
+    function timer(){  
         if (active) {
             etime = parseInt( (new Date() - startTime)/1000 );
-            rest = period - etime;
+            rest = period - etime;　
             $("#time").html("経過時間： " + etime);
-            $("#remain").html("残り時間： " + rest);
+            var minutes = Math.floor(rest / 60);
+            var seconds = rest % 60;
+            $("#remain").html("残り時間： " + rest + "（" + minutes + "分 " + seconds + "秒）");
             analog(rest);
             if (rest <= 0) {
-                active = false;
                 alarm();
+                active = false;
             }
-        }
+ 
+ }
+        
     } 
 
   </script>
@@ -226,9 +243,9 @@
 
     <div id="remain">Remaining time</div>
     <div id="time">Time</div>
-    <button id="btnA">ButtonA</button>  
-    <button id="btnB">ButtonB</button>  
-    <button id="btnC">ButtonC</button>  
+    <button id="btnA">Start</button>  
+    <button id="btnB">Stop</button>  
+    <button id="btnC">Reset</button>  
     <input type="number" id="minute" value=3 >
     <input type="number" id="second" value=0 >
 </body>
