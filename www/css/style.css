@@ -1,6 +1,7 @@
 /**/
-
+@import"https://fonts.googleapis.com/css2?family=Cormorant+Infant:wght@300;400&family=Noto+Sans+SC:wght@100;400;900&family=Poppins:wght@400;700&display=swap";
 body {
+    font-family: 'Noto Sans SC', sans-serif;
     background-color: skyblue;
 }
 
@@ -52,7 +53,7 @@ body {
         font-size: 20px;
         position:absolute; top:380px; left:2%; width:43%; height:60px;
         color: green;
-        font-family: 'Times', sans-serif;
+        font-family: 'Noto Sans SC', sans-serif;
         border-radius: 20px;
         background-color: yellow;
     }
@@ -61,7 +62,7 @@ body {
         font-size: 20px;
         position:absolute; top:380px; left:45%; width:25%; height:60px; 
         color: blue;
-        font-family: 'Times', sans-serif;
+        font-family: 'Noto Sans SC', sans-serif;
         border-radius: 20px;    
     }
 
@@ -69,7 +70,7 @@ body {
         font-size: 10px;
         position:absolute; top:380px; left:70%; width:28%; height:60px; 
         color: blue;
-        font-family: 'Times', sans-serif;
+        font-family: 'Noto Sans SC', sans-serif;
         border-radius: 20px;    
     }
     
