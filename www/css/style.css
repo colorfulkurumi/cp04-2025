@@ -47,10 +47,11 @@ body {
     
     #btnA {
         font-size: 20px;
-        position:absolute; top:380px; left:2%; width:43%; height:60px; 
+        position:absolute; top:380px; left:2%; width:43%; height:60px;
         color: blue;
         font-family: 'Times', sans-serif;
-        border-radius: 20px;    
+        border-radius: 20px;
+        background-color: yellow;
     }
     
     #btnB {
