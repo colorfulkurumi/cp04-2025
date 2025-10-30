@@ -292,9 +292,47 @@
         currentLanguage = lang;
         updateAllTexts();
         updateButtonText();
+        updateTimeDisplayLanguage(); // 切换语言时更新时间显示的语言标签
     }
 
-    // すべてのテキストを更新
+    // 時間表示の言語のみを更新（数値は保持）
+    function updateTimeDisplayLanguage() {
+        var lang = languages[currentLanguage];
+
+        // 使用全局变量中的当前时间值
+        var currentEtime = typeof etime !== 'undefined' ? etime : 0;
+        var currentRest = typeof rest !== 'undefined' ? rest : period || 0;
+
+        // 重新计算并显示时间（使用当前语言）
+        $("#time").html(lang.elapsedTime + currentEtime);
+
+        var hours = Math.floor(currentRest / 3600);
+        var minutes = Math.floor((currentRest % 3600) / 60);
+        var seconds = currentRest % 60;
+        var timeString = "";
+        if (currentLanguage === 'zh') {
+            if (hours > 0) {
+                timeString += hours + "小时 ";
+            }
+            timeString += minutes + "分 " + seconds + "秒";
+        } else if (currentLanguage === 'ja') {
+            if (hours > 0) {
+                timeString += hours + "時間 ";
+            }
+            timeString += minutes + "分 " + seconds + "秒";
+        } else {
+            if (hours > 0) {
+                timeString += hours + "h ";
+            }
+            timeString += minutes + "m " + seconds + "s";
+        }
+        $("#remain").html(lang.remainingTime + currentRest + "（" + timeString + "）");
+
+        // 同时更新圆圈显示
+        analog(currentRest);
+    }
+
+    // すべてのテキストを更新（言語依存のテキストのみ）
     function updateAllTexts() {
         var lang = languages[currentLanguage];
 
@@ -306,9 +344,7 @@
         $('#minute').next('.unit-label').text(lang.minuteUnit);
         $('#second').next('.unit-label').text(lang.secondUnit);
 
-        // 時間表示テキスト更新（如果当前有显示的话）
-        $("#time").html(lang.elapsedTime + "0");
-        $("#remain").html(lang.remainingTime + "0");
+        // 注意：时间显示不在这里更新，以避免重置当前显示的时间
     }
 
     // ブラウザ言語を検出
