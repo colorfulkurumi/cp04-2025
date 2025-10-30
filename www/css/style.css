@@ -110,3 +110,27 @@ body {
     }
     
     input[type=number] {text-align: right;}
+
+    #language-selector {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+    }
+
+    #language-select {
+        font-size: 14px;
+        padding: 5px 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        background-color: white;
+        font-family: 'Noto Sans SC', sans-serif;
+        cursor: pointer;
+    }
+
+    #language-select:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+    }
