@@ -334,6 +334,7 @@
         $('#btnC').prop('disabled', false);
         buttonState = 'idle';
         updateButtonText();
+        updateAllTexts(); // すべてのテキストを正しい言語で更新
         loadSavedTime(); // localStorageから保存された時間を読み込む
 
         // 入力検証イベントのバインド
@@ -408,10 +409,8 @@
         pausedTime = 0;
         buttonState = 'idle';
         updateButtonText();
+        updateAllTexts(); // すべてのテキストを更新
         period = 3600 * parseInt( $("#hour").val() ) + 60 * parseInt( $("#minute").val() ) + parseInt( $("#second").val() );
-        var lang = languages[currentLanguage];
-        $("#time").html(lang.elapsedTime + "0");
-        $("#remain").html(lang.remainingTime + period);
     }
     
  
