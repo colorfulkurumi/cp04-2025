@@ -141,10 +141,13 @@
         var m = parseInt((rest-h*3600)/60);
         var s = parseInt(rest-h*3600-m*60);
         clock(h,m,s,true);
-        var n = parseInt(rest/60);
-        var s = parseInt(rest - m*60);
-        var mstr = "分：" + "〇".repeat(n);
-        var sstr = "秒：" + "〇".repeat(s);
+
+        var maxCircles = 60;
+        var hstr = "時：" + "〇".repeat(Math.min(h, maxCircles));
+        var mstr = "分：" + "〇".repeat(Math.min(m, maxCircles));
+        var sstr = "秒：" + "〇".repeat(Math.min(s, maxCircles));
+
+        $("#hourStr").html(hstr);
         $("#minuteStr").html(mstr);
         $("#secondStr").html(sstr);
     }
@@ -208,7 +211,7 @@
         alarm();
         active = false;
         pausedTime = 0;
-        period = 60* parseInt( $("#minute").val() ) + parseInt( $("#second").val() );
+        period = 3600 * parseInt( $("#hour").val() ) + 60 * parseInt( $("#minute").val() ) + parseInt( $("#second").val() );
         $("#time").html("経過時間： 0");　
         $("#remain").html("残り時間： " + period);
     }
@@ -220,9 +223,15 @@
             etime = parseInt( (new Date() - startTime)/1000 );
             rest = period - etime;　
             $("#time").html("経過時間： " + etime);
-            var minutes = Math.floor(rest / 60);
+            var hours = Math.floor(rest / 3600);
+            var minutes = Math.floor((rest % 3600) / 60);
             var seconds = rest % 60;
-            $("#remain").html("残り時間： " + rest + "（" + minutes + "分 " + seconds + "秒）");
+            var timeString = "";
+            if (hours > 0) {
+                timeString += hours + "時間 ";
+            }
+            timeString += minutes + "分 " + seconds + "秒";
+            $("#remain").html("残り時間： " + rest + "（" + timeString + "）");
             analog(rest);
             if (rest <= 0) {
                 alarm();
@@ -238,6 +247,7 @@
 <body>
     <canvas id="mycanvas" width="200" height="200">Test</canvas>
 
+    <div id="hourStr">〇</div>
     <div id="minuteStr">〇</div>
     <div id="secondStr">〇</div>
 
@@ -247,8 +257,18 @@
     <button id="btnB">Stop</button>
     <button id="btnC">Set</button>
     <div id="input-container">
-        <input type="number" id="minute" value=3 >
-        <input type="number" id="second" value=0 >
+        <div class="input-group">
+            <input type="number" id="hour" value=0 >
+            <span class="unit-label">時</span>
+        </div>
+        <div class="input-group">
+            <input type="number" id="minute" value=3 >
+            <span class="unit-label">分</span>
+        </div>
+        <div class="input-group">
+            <input type="number" id="second" value=0 >
+            <span class="unit-label">秒</span>
+        </div>
     </div>
 </body>
 </html>
