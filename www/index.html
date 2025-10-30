@@ -157,6 +157,40 @@
     // 変数宣言
     var buttonState = 'idle'; // 'idle', 'running', 'paused'
 
+    // localStorageから保存された時間を読み込む
+    function loadSavedTime() {
+        try {
+            var savedHour = localStorage.getItem('timer_hour');
+            var savedMinute = localStorage.getItem('timer_minute');
+            var savedSecond = localStorage.getItem('timer_second');
+
+            if (savedHour !== null) {
+                $('#hour').val(savedHour);
+            }
+            if (savedMinute !== null) {
+                $('#minute').val(savedMinute);
+            }
+            if (savedSecond !== null) {
+                $('#second').val(savedSecond);
+            }
+        } catch (e) {
+            // localStorageが利用できない場合の処理
+            console.log('localStorage is not available');
+        }
+    }
+
+    // 現在の時間をlocalStorageに保存
+    function saveTimeToStorage() {
+        try {
+            localStorage.setItem('timer_hour', $('#hour').val());
+            localStorage.setItem('timer_minute', $('#minute').val());
+            localStorage.setItem('timer_second', $('#second').val());
+        } catch (e) {
+            // localStorageが利用できない場合の処理
+            console.log('localStorage is not available');
+        }
+    }
+
     // ボタンの文案を更新
     function updateButtonText() {
         if (buttonState === 'idle') {
@@ -175,6 +209,7 @@
         $('#btnC').prop('disabled', false);
         buttonState = 'idle';
         updateButtonText();
+        loadSavedTime(); // localStorageから保存された時間を読み込む
         btnCClick(null);
     }
 
@@ -230,6 +265,7 @@
 
     // ButtonCがクリックされた時の処理
     function btnCClick(e){
+        saveTimeToStorage(); // 現在の設定時間をlocalStorageに保存
         alarm();
         active = false;
         pausedTime = 0;
