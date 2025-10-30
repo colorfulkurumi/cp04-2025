@@ -31,9 +31,6 @@
             btnAClick(e);
         });
 
-        $('#btnB').click(function(e) {
-            btnBClick(e);
-        });
 
         $('#btnC').click(function(e) {
             btnCClick(e);
@@ -158,14 +155,26 @@
 
 
     // 変数宣言
+    var buttonState = 'idle'; // 'idle', 'running', 'paused'
 
+    // ボタンの文案を更新
+    function updateButtonText() {
+        if (buttonState === 'idle') {
+            $('#btnA').text('開始');
+        } else if (buttonState === 'running') {
+            $('#btnA').text('一時停止');
+        } else if (buttonState === 'paused') {
+            $('#btnA').text('再開');
+        }
+    }
 
     
     // ボタンの初期設定
     function init(){
         $('#btnA').prop('disabled', false);
-        $('#btnB').prop('disabled', false);
         $('#btnC').prop('disabled', false);
+        buttonState = 'idle';
+        updateButtonText();
         btnCClick(null);
     }
 
@@ -187,32 +196,47 @@
     
     // ButtonAがクリックされた時の処理
     function btnAClick(e){
-        active = true;
-        if (pausedTime) {
+        if (buttonState === 'idle') {
+            // カウントダウン開始
+            active = true;
+            if (pausedTime) {
+                startTime = new Date() - pausedTime * 1000;
+            } else {
+                startTime = new Date();
+            }
+            pausedTime = 0;
+            buttonState = 'running';
+            $("#btnA").prop('disabled', false);
+            $("#btnC").prop('disabled', true);
+        } else if (buttonState === 'running') {
+            // カウントダウン一時停止
+            active = false;
+            pausedTime = etime;
+            buttonState = 'paused';
+            $("#btnA").prop('disabled', false);
+            $("#btnC").prop('disabled', false);
+        } else if (buttonState === 'paused') {
+            // カウントダウン再開
+            active = true;
             startTime = new Date() - pausedTime * 1000;
-        } else {
-            startTime = new Date();
+            pausedTime = 0;
+            buttonState = 'running';
+            $("#btnA").prop('disabled', false);
+            $("#btnC").prop('disabled', true);
         }
-        pausedTime = 0;
-        $("#btnA").prop('disabled', true);
-        $("#btnC").prop('disabled', true);
+        updateButtonText();
     }
 
-    // ButtonBがクリックされた時の処理
-    function btnBClick(e){
-        active = false; 
-        pausedTime = etime;
-        $("#btnA").prop('disabled', false);
-        $("#btnC").prop('disabled', false);
-    }
 
     // ButtonCがクリックされた時の処理
     function btnCClick(e){
         alarm();
         active = false;
         pausedTime = 0;
+        buttonState = 'idle';
+        updateButtonText();
         period = 3600 * parseInt( $("#hour").val() ) + 60 * parseInt( $("#minute").val() ) + parseInt( $("#second").val() );
-        $("#time").html("経過時間： 0");　
+        $("#time").html("経過時間： 0");
         $("#remain").html("残り時間： " + period);
     }
     
@@ -236,6 +260,10 @@
             if (rest <= 0) {
                 alarm();
                 active = false;
+                buttonState = 'idle';
+                updateButtonText();
+                $("#btnA").prop('disabled', false);
+                $("#btnC").prop('disabled', false);
             }
  
  }
@@ -251,11 +279,10 @@
     <div id="minuteStr">〇</div>
     <div id="secondStr">〇</div>
 
-    <div id="remain">Remaining time</div>
-    <div id="time">Time</div>
-    <button id="btnA">Start</button>
-    <button id="btnB">Stop</button>
-    <button id="btnC">Set</button>
+    <div id="remain">残り時間：</div>
+    <div id="time">経過時間：</div>
+    <button id="btnA">開始</button>
+    <button id="btnC">セット</button>
     <div id="input-container">
         <div class="input-group">
             <input type="number" id="hour" value=0 >
