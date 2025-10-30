@@ -191,6 +191,39 @@
         }
     }
 
+    // 入力値の検証と修正
+    function validateInput(inputId, min, max) {
+        var input = $('#' + inputId);
+        var value = parseInt(input.val());
+
+        // 空值或NaN的情况，设为最小值
+        if (isNaN(value) || input.val() === '') {
+            input.val(min);
+            return;
+        }
+
+        // 超出范围的情况，修正到有效范围
+        if (value < min) {
+            input.val(min);
+        } else if (value > max) {
+            input.val(max);
+        }
+    }
+
+    // 小时输入验证（0-11）
+    function validateHour() {
+        validateInput('hour', 0, 11);
+    }
+
+    // 分钟和秒输入验证（0-59）
+    function validateMinute() {
+        validateInput('minute', 0, 59);
+    }
+
+    function validateSecond() {
+        validateInput('second', 0, 59);
+    }
+
     // ボタンの文案を更新
     function updateButtonText() {
         if (buttonState === 'idle') {
@@ -210,6 +243,12 @@
         buttonState = 'idle';
         updateButtonText();
         loadSavedTime(); // localStorageから保存された時間を読み込む
+
+        // 入力検証イベントのバインド
+        $('#hour').on('input', validateHour);
+        $('#minute').on('input', validateMinute);
+        $('#second').on('input', validateSecond);
+
         btnCClick(null);
     }
 
@@ -321,15 +360,15 @@
     <button id="btnC">セット</button>
     <div id="input-container">
         <div class="input-group">
-            <input type="number" id="hour" value=0 >
+            <input type="number" id="hour" value=0 min="0" max="11" >
             <span class="unit-label">時</span>
         </div>
         <div class="input-group">
-            <input type="number" id="minute" value=3 >
+            <input type="number" id="minute" value=3 min="0" max="59" >
             <span class="unit-label">分</span>
         </div>
         <div class="input-group">
-            <input type="number" id="second" value=0 >
+            <input type="number" id="second" value=0 min="0" max="59" >
             <span class="unit-label">秒</span>
         </div>
     </div>
